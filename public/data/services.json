@@ -1,0 +1,42 @@
+[
+	{
+		"id": 1,
+		"userId": 2,
+		"lessonId": 1,
+		"name": "Basic Driving Techniques",
+		"description": "Learn all the basics of driving, including starting, steering, and stopping.",
+		"date": "2024-04-10",
+		"time": "10:00 AM",
+		"status": "pending"
+	},
+	{
+		"id": 2,
+		"userId": 3,
+		"lessonId": 3,
+		"name": "Intermediate Driving Course",
+		"description": "Enhance your driving skills with our intermediate course, focusing on highway driving and parking.",
+		"date": "2024-04-15",
+		"time": "02:00 PM",
+		"status": "approved"
+	},
+	{
+		"id": 3,
+		"userId": 2,
+		"lessonId": 2,
+		"name": "Advanced Maneuvering",
+		"description": "Master advanced driving maneuvers, including parallel parking and emergency braking.",
+		"date": "2024-04-20",
+		"time": "01:00 PM",
+		"status": "canceled"
+	},
+	{
+		"id": 4,
+		"userId": 3,
+		"lessonId": 4,
+		"name": "Defensive Driving Techniques",
+		"description": "Learn how to drive safely and defensively in various traffic conditions and environments.",
+		"date": "2024-04-25",
+		"time": "09:00 AM",
+		"status": "pending"
+	}
+]

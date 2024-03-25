@@ -1,9 +1,7 @@
 import React from 'react'
 import hero from '../../assets/AI-Images/hero-image.png'
 
-type Props = {}
-
-const Banner = (props: Props) => {
+const Banner = () => {
 	return (
 		<div
 			className="relative bg-cover bg-center text-white"

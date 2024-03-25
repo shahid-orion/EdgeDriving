@@ -1,38 +1,52 @@
 'use client'
 
-// app/admin/page.tsx
-// app/admin/page.tsx
-import { getSession, useSession } from 'next-auth/react'
-import { useEffect } from 'react'
-import { useRouter } from 'next/router'
-import { Session } from '@/types/types'
-// If using getServerSideProps
-import { GetServerSideProps } from 'next'
+import React, { useEffect, useState } from 'react' // Import useState
+import { useOrganizationList } from '@clerk/nextjs'
+import { useRouter } from 'next/navigation'
+import { checkUserRole } from '@/utils/userUtils'
 
-// Define a type for your component's props
-type AdminPageProps = {
-	sessionProp: Session // Assuming `sessionProp` is supposed to be a session object from NextAuth.js
-}
+const Dashboard = () => {
+	const router = useRouter() // Correctly get the router instance
+	const [showLoader, setShowLoader] = useState(true) // Define a state for managing loader visibility
 
-export default function AdminPage({ sessionProp }: AdminPageProps) {
-	const { data: session, status } = useSession()
-	const router = useRouter()
+	const { isLoaded, userMemberships } = useOrganizationList({
+		userMemberships: true
+	})
 
 	useEffect(() => {
-		if (status === 'loading') return // Wait until loading is done.
-		if (status === 'unauthenticated' || session?.user?.role !== 'admin') {
-			router.push('/app/login/page') // Adjust as needed.
-		}
-	}, [session, status, router])
+		if (isLoaded && userMemberships.data && userMemberships.data.length > 0) {
+			const adminOrganizationRole = userMemberships.data[0].role
 
-	if (status === 'loading') {
-		return <p>Loading...</p>
+			// Assuming you're looking to find if any of the roles is 'org:admin'
+			const isAdmin = userMemberships.data.some(
+				(mem) => mem.role === 'org:admin'
+			)
+
+			if (!isAdmin) {
+				router.push('/') // Redirect if not admin
+			} else {
+				setShowLoader(false)
+				router.push('/admin') // Directly go to admin page if admin
+			}
+		}
+	}, [isLoaded, userMemberships, router])
+
+	// Render loading state or the actual content
+	if (!isLoaded) {
+		return <>Loading</>
 	}
 
 	return (
-		<div>
-			<h1>Admin Dashboard</h1>
-			{/* Admin dashboard content */}
-		</div>
+		<>
+			<ul>
+				{userMemberships.data?.map((mem) => (
+					<li key={mem.id}>
+						<span>{mem.organization.name}</span>
+					</li>
+				))}
+			</ul>
+		</>
 	)
 }
+
+export default Dashboard

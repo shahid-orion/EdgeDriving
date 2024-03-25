@@ -4,9 +4,31 @@ import { useState } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
 import logo from '@/public/assets/logo.png'
+import {
+	UserButton,
+	useUser,
+	useSession,
+	SignedOut,
+	SignInButton,
+	SignedIn
+} from '@clerk/nextjs'
+import { checkUserRole } from '@/utils/userUtils'
+import { useOrganizationList } from '@clerk/nextjs'
+
+const links = [
+	{ title: 'Home', url: '/' },
+	{ title: 'About', url: '/about' },
+	{ title: 'Services', url: '/services' },
+	{ title: 'Booking', url: '/booking' },
+	{ title: 'Contact', url: '/contact' },
+	{ title: 'Admin', url: '/admin', role: 'admin' }
+]
 
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+
+	const { session } = useSession()
+	const userRole = checkUserRole(session!)
 
 	return (
 		<nav className="bg-[#007592] shadow-lg">
@@ -31,40 +53,34 @@ const Navbar = () => {
 								isMenuOpen ? 'flex' : 'hidden'
 							}`}
 						>
-							<Link href="/" className="py-4 px-2 text-white font-semibold">
-								Home
-							</Link>
+							{links.map((link) =>
+								(link.role === 'admin' && userRole === 'org:admin') ||
+								!link.role ? (
+									<Link
+										key={link.title}
+										href={link.url}
+										className="py-4 px-2 text-white font-semibold"
+									>
+										{/* Use a div instead of an anchor tag */}
+										<div className="mr-5 cursor-pointer hover:text-[#002d39]">
+											{link.title}
+										</div>
+									</Link>
+								) : null
+							)}
+
 							<Link
-								href="/about"
-								className="py-4 px-2 text-white font-semibold"
+								href="/"
+								className="block text-lg px-2 py-4 text-white font-semibold transition duration-300"
 							>
-								About
-							</Link>
-							<Link
-								href="/services"
-								className="py-4 px-2 text-white font-semibold"
-							>
-								Services
-							</Link>
-							<Link
-								href="/booking"
-								className="py-4 px-2 text-white font-semibold"
-							>
-								Booking
-							</Link>
-							<Link
-								href="/contact"
-								className="py-4 px-2 text-white font-semibold"
-							>
-								Contact
-							</Link>
-							<Link
-								href="/login"
-								className="py-4 px-2 text-white font-semibold"
-							>
-								Login
+								<UserButton afterSignOutUrl="/" />
+
+								<SignedOut>
+									<SignInButton afterSignInUrl="/admin" mode="modal" />
+								</SignedOut>
 							</Link>
 						</div>
+						<div></div>
 					</div>
 					{/* Hamburger menu button */}
 					<div className="md:hidden flex items-center">
@@ -134,11 +150,18 @@ const Navbar = () => {
 					</li>
 					<li>
 						<Link
-							href="/login"
+							href="/admin"
 							className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300"
 						>
-							Login
+							Admin
 						</Link>
+					</li>
+					<li className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300">
+						<UserButton afterSignOutUrl="/" />
+
+						<SignedOut>
+							<SignInButton afterSignInUrl="/admin" mode="modal" />
+						</SignedOut>
 					</li>
 				</ul>
 			</div>

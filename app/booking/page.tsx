@@ -1,14 +1,9 @@
 import BookingForm from '../components/BookingForm'
 import Calendar from '../components/Calendar'
 
-type Props = {}
-
-const Booking = (props: Props) => {
+const Booking = () => {
 	return (
 		<>
-			{/* Booking Form */}
-			<BookingForm />
-			{/* Calendar */}
 			<Calendar />
 		</>
 	)

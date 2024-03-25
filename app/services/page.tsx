@@ -2,7 +2,7 @@
 
 import { useState } from 'react'
 import lessonsData from '@/public/data/services.json' // Ensure the path is correct
-import { Lesson } from '@/types/types'
+import { Lesson } from '@/types'
 
 // Add this type definition at the top of your component or in a types file
 type LessonStatus = 'pending' | 'approved' | 'canceled'

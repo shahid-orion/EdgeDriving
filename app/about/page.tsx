@@ -1,6 +1,6 @@
 'use client'
 
-import { Instructor } from '@/types/types'
+import { Instructor } from '@/types'
 import Image from 'next/image'
 import { useState, useEffect } from 'react'
 import instructorsData from '@/public/data/instructors.json'
@@ -8,6 +8,25 @@ import hero from '../../assets/AI-Images/hero-image.png'
 
 const About = () => {
 	const [instructors, setInstructors] = useState<Instructor[]>([])
+
+	// In your About component
+	// import { db } from '@/utils/firebaseConfig'
+
+	// useEffect(() => {
+	// 	const fetchInstructors = async () => {
+	// 		const snapshot = await db.collection('instructors').get()
+	// 		const instructors = snapshot.docs.map(
+	// 			(doc) =>
+	// 				({
+	// 					id: doc.id,
+	// 					...doc.data()
+	// 				} as Instructor)
+	// 		)
+	// 		setInstructors(instructors)
+	// 	}
+
+	// 	fetchInstructors()
+	// }, [])
 
 	return (
 		<div className="py-8 px-4">

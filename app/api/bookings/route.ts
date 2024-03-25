@@ -1,15 +1,14 @@
-import { NextRequest, NextResponse } from 'next/server'
-import bookingData from '@/app/data/bookings.json'
-import { NextApiRequest } from 'next'
-import axios from 'axios'
+import { NextResponse } from 'next/server'
+import bookings from '../../../public/data/bookings.json'
 
-export async function GET(request: NextApiRequest) {
+export async function GET(request: Request) {
 	try {
-		const res = await fetch('/edge/public/data/bookings.json')
-		const data = await res.json()
-		console.log(res)
-		return NextResponse.json(res)
+		// const res = await fetch('/edge/public/data/bookings.json')
+		// const data = await res.json()
+		console.log(bookings)
+		return NextResponse.json(bookings)
 	} catch (error: any) {
 		return NextResponse.json(error)
 	}
+	//return NextResponse.json({ msg: 'Hello from server' })
 }

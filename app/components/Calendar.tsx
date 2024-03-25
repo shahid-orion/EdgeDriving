@@ -6,7 +6,7 @@ import interactionPlugin from '@fullcalendar/interaction' // Corrected import
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import lessonsData from '../../public/data/bookings.json'
-import { CalendarEvent } from '@/types/types'
+import { CalendarEvent } from '@/types'
 
 const Calendar = () => {
 	const [events, setEvents] = useState<CalendarEvent[]>([])

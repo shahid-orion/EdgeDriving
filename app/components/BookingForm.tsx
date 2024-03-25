@@ -1,11 +1,9 @@
 'use client'
-import { CalendarEvent, NewBooking } from '@/types/types'
+import { CalendarEvent, NewBooking } from '@/types'
 import React, { ChangeEvent, FormEvent, useState } from 'react'
 import Calendar from '../components/Calendar'
 
-type Props = {}
-
-const BookingForm = (props: Props) => {
+const BookingForm = () => {
 	const [newBooking, setNewBooking] = useState<NewBooking>({
 		date: '',
 		startTime: '',

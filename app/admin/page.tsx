@@ -4,6 +4,11 @@ import React, { useEffect, useState } from 'react' // Import useState
 import { useOrganizationList } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { checkUserRole } from '@/utils/userUtils'
+import ServicesAdmin from '../components/ServicesAdmin'
+import InstructorAdmin from '../components/InstructorAdmin'
+import { Lesson } from '@/types'
+import CarouselAdmin from '../components/CarouselAdmin'
+import CalendarAdmin from '../components/CalendarAdmin'
 
 const Dashboard = () => {
 	const router = useRouter() // Correctly get the router instance
@@ -29,23 +34,36 @@ const Dashboard = () => {
 				router.push('/admin') // Directly go to admin page if admin
 			}
 		}
-	}, [isLoaded, userMemberships, router])
+	}, [isLoaded, router])
 
 	// Render loading state or the actual content
 	if (!isLoaded) {
 		return <>Loading</>
 	}
 
+	const handleSaveService = (lesson: Lesson) => {
+		// Logic to save the lesson data to your backend or state
+		console.log('Saving service', lesson)
+	}
+
+	const handleResetServiceForm = () => {
+		// Logic to reset the form or clear state
+		console.log('Resetting service form')
+	}
+
 	return (
-		<>
-			<ul>
-				{userMemberships.data?.map((mem) => (
-					<li key={mem.id}>
-						<span>{mem.organization.name}</span>
-					</li>
-				))}
-			</ul>
-		</>
+		<div key="adminDashboard" className="min-h-screen bg-gray-100 p-8">
+			<h1 className="text-4xl font-bold text-center mb-8">Admin Dashboard</h1>
+			<div className="space-y-12">
+				<CarouselAdmin />
+				<ServicesAdmin
+					onSave={handleSaveService}
+					onReset={handleResetServiceForm}
+				/>
+				{/* <InstructorAdmin /> */}
+				<CalendarAdmin />
+			</div>
+		</div>
 	)
 }
 

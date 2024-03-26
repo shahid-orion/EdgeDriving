@@ -1,3 +1,9 @@
+export type CarouselItem = {
+	id: number
+	imageUrl: string
+	caption: string
+}
+
 export type Lesson = {
 	id?: number
 	userId?: number
@@ -7,6 +13,15 @@ export type Lesson = {
 	status?: LessonStatus
 	name?: string
 	description?: string
+}
+
+export type LessonStatus = 'pending' | 'approved' | 'canceled'
+
+// Define a Props interface for the component
+interface ServicesAdminProps {
+	onSave: (lesson: Lesson) => void
+	onReset: () => void
+	onDelete?: (id: number) => void // Optional prop
 }
 
 export type Instructor = {

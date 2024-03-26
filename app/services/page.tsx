@@ -2,12 +2,9 @@
 
 import { useState } from 'react'
 import lessonsData from '@/public/data/services.json' // Ensure the path is correct
-import { Lesson } from '@/types'
+import { Lesson, LessonStatus } from '@/types'
 
-// Add this type definition at the top of your component or in a types file
-type LessonStatus = 'pending' | 'approved' | 'canceled'
-
-export default function Booking() {
+const Services = () => {
 	const [lessons, setLessons] = useState<Lesson[]>(lessonsData as Lesson[])
 
 	// Function to return status badge styles based on lesson status
@@ -25,7 +22,7 @@ export default function Booking() {
 	}
 
 	return (
-		<div className="p-4">
+		<div className="bg-white shadow rounded-lg p-6 mb-5 max-w-7xl mx-auto">
 			<h2 className="text-4xl text-center font-semibold mb-10 sm:text-5xl md:text-6xl text-gray-800">
 				Current Services
 			</h2>
@@ -42,16 +39,18 @@ export default function Booking() {
 							{lesson.time}
 						</p>
 						{/* Status Badge */}
-						<span
+						{/* <span
 							className={`inline-block px-3 py-1 rounded-full text-sm font-medium mt-4 ${statusStyles(
 								lesson.status
 							)}`}
 						>
 							{lesson.status.charAt(0).toUpperCase() + lesson.status.slice(1)}
-						</span>
+						</span> */}
 					</div>
 				))}
 			</div>
 		</div>
 	)
 }
+
+export default Services

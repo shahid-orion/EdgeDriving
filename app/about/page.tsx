@@ -29,7 +29,7 @@ const About = () => {
 	// }, [])
 
 	return (
-		<div className="py-8 px-4">
+		<div className="bg-white shadow rounded-lg p-6 mb-5 max-w-7xl mx-auto">
 			<h1 className="text-4xl text-center font-semibold mb-10 sm:text-5xl md:text-6xl text-gray-800">
 				Meet Our Instructors
 			</h1>

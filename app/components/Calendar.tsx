@@ -24,7 +24,7 @@ const Calendar = () => {
 	}, [])
 
 	return (
-		<div className="p-4">
+		<div className="bg-white shadow rounded-lg p-6 mb-5 max-w-7xl mx-auto">
 			<h2 className="text-4xl text-center font-semibold mb-10 md:text-5xl text-gray-800">
 				Book Your Lesson
 			</h2>

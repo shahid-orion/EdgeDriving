@@ -4,11 +4,7 @@ import './globals.css'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import { ClerkProvider } from '@clerk/nextjs'
-import toast, { Toaster } from 'react-hot-toast'
-
-const notify = () => toast('Here is your toast.')
-
-const inter = Inter({ subsets: ['latin'] })
+import { Toaster } from 'react-hot-toast'
 
 export const metadata: Metadata = {
 	title: 'Edge Driving Instruction',

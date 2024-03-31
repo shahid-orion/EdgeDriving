@@ -12,7 +12,7 @@ import {
 } from 'firebase/firestore'
 import { Instructor } from '@/types'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
-import { fetchCollectionData } from '@/utils/utils' // Adjust the import path as necessary
+import { fetchCollectionData } from '@/utils/utils'
 import toast from 'react-hot-toast'
 
 const AboutAdmin = () => {

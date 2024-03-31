@@ -5,9 +5,7 @@ import FullCalendar from '@fullcalendar/react'
 import interactionPlugin from '@fullcalendar/interaction' // Corrected import
 import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
-import lessonsData from '../../public/data/bookings.json'
 import { CalendarEvent } from '@/types'
-import { collection, getDocs } from 'firebase/firestore'
 import { db } from '@/firebaseConfig'
 import { fetchCollectionData } from '@/utils/utils'
 

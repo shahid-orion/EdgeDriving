@@ -3,7 +3,6 @@
 import React, { useEffect, useState } from 'react' // Import useState
 import { useOrganizationList, useSession } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
-import { checkUserRole } from '@/utils/userUtils'
 import ServicesAdmin from '../components/ServicesAdmin'
 import CarouselAdmin from '../components/CarouselAdmin'
 import CalendarAdmin from '../components/CalendarAdmin'

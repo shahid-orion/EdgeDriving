@@ -1,21 +1,23 @@
 export type CarouselItem = {
-	id: number
-	imageUrl: string
-	caption: string
+	id?: tring
+	imageUrl?: string
+	caption?: string
+	file?: File
 }
 
-export type Lesson = {
-	id?: number
-	userId?: number
-	lessonId?: number
-	date?: string
-	time?: string
-	status?: LessonStatus
+export type Service = {
+	id?: string
 	name?: string
 	description?: string
+	service?: ServiceType
+	price?: number
 }
 
-export type LessonStatus = 'pending' | 'approved' | 'canceled'
+export type ServiceType =
+	| 'GENERAL'
+	| 'INTENSIVE'
+	| 'PACKAGE'
+	| 'CAR HIRE FOR DRIVING TEST'
 
 // Define a Props interface for the component
 interface ServicesAdminProps {
@@ -25,13 +27,13 @@ interface ServicesAdminProps {
 }
 
 export type Instructor = {
-	id?: number
+	id?: string
 	name?: string
 	photoUrl?: string // URL to the photo in Firebase Storage
-	photo?: string
 	expertise?: string
 	experience?: string
 	description?: string
+	file?: File // Optional file field for image uploads
 }
 
 export interface CalendarEvent {
@@ -58,4 +60,18 @@ export interface User {
 
 export interface Session {
 	user?: User // user is optional to handle cases where session might not have a user
+}
+
+// Generic type for Firestore document
+export type FirestoreDocument<T> = T & {
+	id: string
+}
+
+interface SelectInfo {
+	startStr: string
+	endStr: string
+	event?: {
+		title: string
+	}
+	// Add more properties as needed based on FullCalendar documentation
 }

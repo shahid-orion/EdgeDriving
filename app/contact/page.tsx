@@ -25,10 +25,10 @@ const ContactPage = () => {
 	return (
 		<div className="container mx-auto p-6">
 			<div className="text-center">
-				<h1 className="text-4xl md:text-5xl font-bold text-gray-800 mb-8">
+				<h1 className="text-4xl text-center font-semibold mb-10 sm:text-5xl md:text-6xl text-gray-800">
 					Contact Us
 				</h1>
-				<p className="mb-4 text-lg text-gray-600">
+				<p className="mb-4 text-2xl text-gray-600">
 					Have questions? We would love to hear from you.
 				</p>
 			</div>
@@ -43,11 +43,11 @@ const ContactPage = () => {
 					</div>
 					<div className="flex items-center mb-3">
 						<EnvelopeIcon className="h-6 w-6 mr-2" />
-						<a href="mailto:info@edgedriving.com">info@edgedriving.com</a>
+						<a href="mailto:info@edgedriving.com">eedgedriving@gmail.com</a>
 					</div>
 					<div className="flex items-center">
 						<PhoneIcon className="h-6 w-6 mr-2" />
-						<a href="tel:+1234567890">(123) 456-7890</a>
+						<a href="tel:0469046923">0469046923</a>
 					</div>
 				</div>
 

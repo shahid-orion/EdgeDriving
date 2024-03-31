@@ -16,7 +16,7 @@ const BookingForm = () => {
 		setNewBooking((prev) => ({ ...prev, [name]: value }))
 	}
 
-	const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 
 		const newEvent = {

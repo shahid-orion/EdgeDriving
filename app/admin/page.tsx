@@ -1,49 +1,58 @@
 'use client'
 
 import React, { useEffect, useState } from 'react' // Import useState
-import { useOrganizationList } from '@clerk/nextjs'
+import { useOrganizationList, useSession } from '@clerk/nextjs'
 import { useRouter } from 'next/navigation'
 import { checkUserRole } from '@/utils/userUtils'
 import ServicesAdmin from '../components/ServicesAdmin'
-import InstructorAdmin from '../components/InstructorAdmin'
-import { Lesson } from '@/types'
 import CarouselAdmin from '../components/CarouselAdmin'
 import CalendarAdmin from '../components/CalendarAdmin'
+import AboutAdmin from '../components/AboutAdmin'
+import { PuffLoader } from 'react-spinners'
 
 const Dashboard = () => {
 	const router = useRouter() // Correctly get the router instance
-	const [showLoader, setShowLoader] = useState(true) // Define a state for managing loader visibility
 
 	const { isLoaded, userMemberships } = useOrganizationList({
 		userMemberships: true
 	})
+	const [isLoading, setIsLoading] = useState(true) // Control the loading state
+	const { session } = useSession() // Correctly retrieve the session
 
 	useEffect(() => {
-		if (isLoaded && userMemberships.data && userMemberships.data.length > 0) {
-			const adminOrganizationRole = userMemberships.data[0].role
+		// Define the async function inside the useEffect
+		const checkAdminStatus = async () => {
+			if (session) {
+				// Check if user is an admin. Adjust the logic based on your user session structure.
+				const isAdmin = session.user.organizationMemberships.some(
+					(membership) => membership.role === 'org:admin'
+				)
 
-			// Assuming you're looking to find if any of the roles is 'org:admin'
-			const isAdmin = userMemberships.data.some(
-				(mem) => mem.role === 'org:admin'
-			)
-
-			if (!isAdmin) {
-				router.push('/') // Redirect if not admin
+				if (!isAdmin) {
+					// If not admin, redirect to home
+					router.push('/')
+				} else {
+					setIsLoading(false) // If admin, display the dashboard
+				}
 			} else {
-				setShowLoader(false)
-				router.push('/admin') // Directly go to admin page if admin
+				// If no session is found, redirect to home
+				router.push('/')
 			}
 		}
-	}, [isLoaded, router])
+
+		// Invoke the async function
+		checkAdminStatus()
+	}, [session, router])
 
 	// Render loading state or the actual content
 	if (!isLoaded) {
-		return <>Loading</>
-	}
-
-	const handleSaveService = (lesson: Lesson) => {
-		// Logic to save the lesson data to your backend or state
-		console.log('Saving service', lesson)
+		return (
+			<>
+				<div className="flex justify-center items-center mt-96">
+					<PuffLoader color="#36d7b7" />
+				</div>
+			</>
+		)
 	}
 
 	const handleResetServiceForm = () => {
@@ -53,15 +62,12 @@ const Dashboard = () => {
 
 	return (
 		<div key="adminDashboard" className="min-h-screen bg-gray-100 p-8">
-			<h1 className="text-4xl font-bold text-center mb-8">Admin Dashboard</h1>
+			<h1 className="text-6xl font-bold text-center mb-8">Admin Dashboard</h1>
 			<div className="space-y-12">
 				<CarouselAdmin />
-				<ServicesAdmin
-					onSave={handleSaveService}
-					onReset={handleResetServiceForm}
-				/>
-				{/* <InstructorAdmin /> */}
 				<CalendarAdmin />
+				<AboutAdmin />
+				<ServicesAdmin />
 			</div>
 		</div>
 	)

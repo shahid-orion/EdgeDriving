@@ -13,11 +13,11 @@ import {
 	SignedIn
 } from '@clerk/nextjs'
 import { checkUserRole } from '@/utils/userUtils'
-import { useOrganizationList } from '@clerk/nextjs'
+import { usePathname } from 'next/navigation'
 
 const links = [
 	{ title: 'Home', url: '/' },
-	{ title: 'About', url: '/about' },
+	{ title: 'About Us', url: '/about' },
 	{ title: 'Services', url: '/services' },
 	{ title: 'Booking', url: '/booking' },
 	{ title: 'Contact', url: '/contact' },
@@ -26,12 +26,13 @@ const links = [
 
 const Navbar = () => {
 	const [isMenuOpen, setIsMenuOpen] = useState(false)
+	const path = usePathname() // Use useRouter hook
 
 	const { session } = useSession()
 	const userRole = checkUserRole(session!)
 
 	return (
-		<nav className="bg-[#007592] shadow-lg">
+		<nav className="bg-[#007592] shadow-lg md:fixed top-0 w-full z-10">
 			<div className="max-w-6xl mx-auto px-4">
 				<div className="flex justify-between">
 					<div className="flex space-x-7">
@@ -62,7 +63,11 @@ const Navbar = () => {
 										className="py-4 px-2 text-white font-semibold"
 									>
 										{/* Use a div instead of an anchor tag */}
-										<div className="mr-5 cursor-pointer hover:text-[#002d39]">
+										<div
+											className={`block text-sm px-5 rounded py-2 transition duration-300 ${
+												path === link.url ? 'bg-[#0089ab]' : 'text-white'
+											}`}
+										>
 											{link.title}
 										</div>
 									</Link>
@@ -108,55 +113,23 @@ const Navbar = () => {
 			{/* Mobile menu */}
 			<div className={`${isMenuOpen ? 'block' : 'hidden'} mobile-menu`}>
 				<ul className="">
-					<li>
-						<Link
-							href="/"
-							className="block text-sm px-2 py-4 text-white bg-blue-500 font-semibold"
-						>
-							Home
-						</Link>
-					</li>
-					<li>
-						<Link
-							href="/about"
-							className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300"
-						>
-							About
-						</Link>
-					</li>
-					<li>
-						<Link
-							href="/services"
-							className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300"
-						>
-							Services
-						</Link>
-					</li>
-					<li>
-						<Link
-							href="/booking"
-							className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300"
-						>
-							Booking
-						</Link>
-					</li>
-					<li>
-						<Link
-							href="/contact"
-							className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300"
-						>
-							Contact
-						</Link>
-					</li>
-					<li>
-						<Link
-							href="/admin"
-							className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300"
-						>
-							Admin
-						</Link>
-					</li>
-					<li className="block text-sm px-2 py-4 text-white hover:bg-blue-700 transition duration-300">
+					{links.map((link) => (
+						<li key={link.title}>
+							{/* Check for user role if needed, similar to the desktop menu */}
+							{(link.role === 'admin' && userRole === 'org:admin') ||
+							!link.role ? (
+								<Link
+									href={link.url}
+									className={`block text-sm px-5 rounded py-2 transition duration-300 text-white ${
+										path === link.url ? 'bg-[#0089ab] font-bold' : ''
+									}`}
+								>
+									{link.title}
+								</Link>
+							) : null}
+						</li>
+					))}
+					<li className="block text-sm px-5 rounded py-2 text-white transition duration-300">
 						<UserButton afterSignOutUrl="/" />
 
 						<SignedOut>

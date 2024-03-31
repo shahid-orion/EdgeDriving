@@ -7,49 +7,111 @@ import dayGridPlugin from '@fullcalendar/daygrid'
 import timeGridPlugin from '@fullcalendar/timegrid'
 import lessonsData from '../../public/data/bookings.json'
 import { CalendarEvent } from '@/types'
+import { collection, getDocs } from 'firebase/firestore'
+import { db } from '@/firebaseConfig'
+import { fetchCollectionData } from '@/utils/utils'
 
 const Calendar = () => {
 	const [events, setEvents] = useState<CalendarEvent[]>([])
-
 	useEffect(() => {
-		const calendarEvents = lessonsData.map((lesson) => ({
-			id: lesson.id.toString(),
-			title: `${lesson.instructor} (${lesson.booked ? 'Booked' : 'Available'})`,
-			start: `${lesson.date}T${lesson.startTime}`,
-			end: `${lesson.date}T${lesson.endTime}`,
-			color: lesson.booked ? '#ff9f89' : '#6ee7b7' // Different colors for booked vs. available
-		}))
+		const fetchEvents = async () => {
+			const fetchedEvents = await fetchCollectionData<CalendarEvent>(
+				db,
+				'bookings'
+			)
+			setEvents(fetchedEvents)
+		}
 
-		setEvents(calendarEvents)
+		fetchEvents()
 	}, [])
+	// useEffect(() => {
+	// 	const fetchEvents = async () => {
+	// 		const querySnapshot = await getDocs(collection(db, 'bookings'))
+	// 		const fetchedEvents = querySnapshot.docs.map((doc) => ({
+	// 			...doc.data(),
+	// 			id: doc.id,
+	// 			start: doc.data().start,
+	// 			end: doc.data().end,
+	// 			title: doc.data().title,
+	// 			color: doc.data().color // Assuming your Firestore documents have a 'color' field
+	// 		})) as CalendarEvent[]
+	// 		setEvents(fetchedEvents)
+	// 	}
+
+	// 	fetchEvents()
+	// }, [])
 
 	return (
 		<div className="bg-white shadow rounded-lg p-6 mb-5 max-w-7xl mx-auto">
 			<h2 className="text-4xl text-center font-semibold mb-10 md:text-5xl text-gray-800">
-				Book Your Lesson
+				Booking Availabilities
 			</h2>
+			{/* Calendar */}
 			<FullCalendar
 				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
 				initialView="dayGridMonth"
 				events={events}
-				nowIndicator
+				editable={false}
+				selectable={true}
+				selectMirror={true}
+				dayMaxEvents={true}
+				weekends={true}
+				headerToolbar={{
+					left: 'prev,next',
+					center: 'title',
+					right: 'dayGridMonth,timeGridWeek,timeGridDay' // Removed 'listWeek' and today button
+				}}
+				eventContent={({ event, view }) => (
+					// Customize the appearance of events here
+					<div className="bg-blue-500 text-white rounded-lg p-2 shadow">
+						<strong>{event.title}</strong>
+						<br />
+						{event.start?.toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit'
+						})}{' '}
+						-
+						{event.end?.toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit'
+						})}
+					</div>
+				)}
+			/>
+
+			{/* <FullCalendar
+				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
+				initialView="dayGridMonth"
+				events={events}
+				editable={false}
+				selectable={true}
+				selectMirror={true}
+				dayMaxEvents={true}
+				weekends={true}
 				headerToolbar={{
 					left: 'prev,next today',
 					center: 'title',
-					right: 'dayGridMonth,timeGridWeek,timeGridDay'
+					right: 'dayGridMonth,timeGridWeek,timeGridDay listWeek',
+					start: 'title', // You can adjust this part to better position the button
+					end: 'today prev,next' // Adjusting the position of the today, prev, and next buttons
 				}}
-				eventClick={(clickInfo) => {
-					alert(
-						`${clickInfo.event.title}\n\nStart: ${clickInfo.event.startStr}\nEnd: ${clickInfo.event.endStr}`
-					)
-					// Implement further functionalities as needed, e.g., opening a booking modal
-				}}
-				selectable={true}
-				select={(selectionInfo) => {
-					console.log(selectionInfo)
-					// Placeholder for functionality to add new bookings
-				}}
-			/>
+				eventContent={({ event, view }) => (
+					// Customize the appearance of events here
+					<div className="bg-blue-500 text-white rounded-lg p-2 shadow">
+						<strong>{event.title}</strong>
+						<br />
+						{event.start?.toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit'
+						})}{' '}
+						-
+						{event.end?.toLocaleTimeString([], {
+							hour: '2-digit',
+							minute: '2-digit'
+						})}
+					</div>
+				)}
+			/> */}
 		</div>
 	)
 }

@@ -57,7 +57,7 @@ const Calendar = () => {
 				headerToolbar={{
 					left: 'prev,next',
 					center: 'title',
-					right: 'dayGridMonth,timeGridWeek,timeGridDay' // Removed 'listWeek' and today button
+					right: 'dayGridMonth,timeGridWeek,timeGridDay'
 				}}
 				eventContent={({ event, view }) => (
 					// Customize the appearance of events here
@@ -76,40 +76,6 @@ const Calendar = () => {
 					</div>
 				)}
 			/>
-
-			{/* <FullCalendar
-				plugins={[dayGridPlugin, timeGridPlugin, interactionPlugin]}
-				initialView="dayGridMonth"
-				events={events}
-				editable={false}
-				selectable={true}
-				selectMirror={true}
-				dayMaxEvents={true}
-				weekends={true}
-				headerToolbar={{
-					left: 'prev,next today',
-					center: 'title',
-					right: 'dayGridMonth,timeGridWeek,timeGridDay listWeek',
-					start: 'title', // You can adjust this part to better position the button
-					end: 'today prev,next' // Adjusting the position of the today, prev, and next buttons
-				}}
-				eventContent={({ event, view }) => (
-					// Customize the appearance of events here
-					<div className="bg-blue-500 text-white rounded-lg p-2 shadow">
-						<strong>{event.title}</strong>
-						<br />
-						{event.start?.toLocaleTimeString([], {
-							hour: '2-digit',
-							minute: '2-digit'
-						})}{' '}
-						-
-						{event.end?.toLocaleTimeString([], {
-							hour: '2-digit',
-							minute: '2-digit'
-						})}
-					</div>
-				)}
-			/> */}
 		</div>
 	)
 }

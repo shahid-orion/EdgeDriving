@@ -26,7 +26,7 @@ export default function Home() {
 					</section>
 					<a
 						href="tel:0469046923"
-						className="font-bold text-[#002d39] text-2xl md:text-5xl transition-colors duration-200 mx-4"
+						className="font-bold text-[#002d39] text-3xl md:text-5xl transition-colors duration-200 md:mx-4 mt-2 md:mt-0"
 					>
 						0469 046 923
 					</a>

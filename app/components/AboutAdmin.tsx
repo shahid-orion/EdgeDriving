@@ -1,6 +1,12 @@
 'use client'
 
-import React, { useState, useEffect, ChangeEvent, FormEvent } from 'react'
+import React, {
+	useState,
+	useEffect,
+	ChangeEvent,
+	FormEvent,
+	useRef
+} from 'react'
 import { db, storage } from '@/firebaseConfig'
 import {
 	collection,
@@ -14,6 +20,7 @@ import { Instructor } from '@/types'
 import { getDownloadURL, ref, uploadBytes } from 'firebase/storage'
 import { fetchCollectionData } from '@/utils/utils'
 import toast from 'react-hot-toast'
+import { PuffLoader } from 'react-spinners'
 
 const AboutAdmin = () => {
 	const [instructors, setInstructors] = useState<Instructor[]>([])
@@ -21,6 +28,7 @@ const AboutAdmin = () => {
 		useState<Instructor | null>(null)
 	const [isLoading, setIsLoading] = useState(true)
 	const [editingItem, setEditingItem] = useState<Instructor | null>(null)
+	const fileInputRef = useRef<HTMLInputElement>(null)
 
 	// useEffect(() => {
 	// 	const fetchInstructors = async () => {
@@ -61,13 +69,34 @@ const AboutAdmin = () => {
 	const handleFileChange = (e: ChangeEvent<HTMLInputElement>) => {
 		if (e.target.files && e.target.files[0]) {
 			const file = e.target.files[0]
-			setSelectedInstructor((prev) => ({ ...prev, file: file } as Instructor))
+			const fileSize = file.size / 1024 / 1024 // Convert bytes to MB
+			const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+
+			if (fileSize > 5) {
+				toast.error('File size should not exceed 5 MB.')
+				// Reset the file input
+				e.target.value = ''
+				return // Exit the function
+			} else if (!allowedTypes.includes(file.type)) {
+				toast.error('Only image files (jpeg, png, gif) are allowed.')
+				// Reset the file input
+				e.target.value = ''
+				return // Exit the function
+			} else {
+				setSelectedInstructor((prev) => ({
+					...prev,
+					file: file
+				}))
+			}
 		}
 	}
 
+	// Adjusted handleSubmit to clear all fields, including description, upon successful submit
 	const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
+		setIsLoading(true)
 		const toastId = toast.loading('Please Wait...')
+
 		if (!selectedInstructor) return
 
 		let photoUrl = selectedInstructor.photoUrl
@@ -86,18 +115,23 @@ const AboutAdmin = () => {
 		const { id, file, ...data } = selectedInstructor
 		const instructorData = { ...data, photoUrl }
 
-		if (id) {
-			await setDoc(doc(db, 'instructors', id), instructorData)
-		} else {
-			await addDoc(collection(db, 'instructors'), instructorData)
+		try {
+			if (id) {
+				await setDoc(doc(db, 'instructors', id), instructorData)
+			} else {
+				await addDoc(collection(db, 'instructors'), instructorData)
+			}
+			setSelectedInstructor(null) // Reset the entire selectedInstructor state to clear all fields
+			// Clear the file input
+			if (fileInputRef.current) {
+				fileInputRef.current.value = ''
+			}
+			toast.success('Updated successfully!', { id: toastId })
+		} catch (error) {
+			toast.error('Failed to update!', { id: toastId })
+		} finally {
+			setIsLoading(false)
 		}
-
-		//toast notification
-		toast.success('Updated successfully!', {
-			id: toastId
-		})
-
-		setSelectedInstructor(null)
 	}
 
 	const handleDelete = async (id: string) => {
@@ -117,112 +151,117 @@ const AboutAdmin = () => {
 			<h2 className="text-4xl font-semibold mb-5 text-center">
 				Manage Instructors
 			</h2>
-			{isLoading ? <div className="text-center">Loading...</div> : null}
-
-			<form
-				onSubmit={handleSubmit}
-				className="space-y-6 p-6 rounded-lg shadow bg-[#00a9d4]"
-			>
-				<div className="grid-cols-1 md:grid md:grid-cols-2 gap-6">
-					<div>
-						<label
-							htmlFor="name"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Name
-						</label>
-						<input
-							id="name"
-							name="name"
-							type="text"
-							value={selectedInstructor?.name || ''}
-							onChange={handleChange}
-							required
-							className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4]"
-						/>
-					</div>
-
-					<div>
-						<label
-							htmlFor="expertise"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Expertise
-						</label>
-						<input
-							id="expertise"
-							name="expertise"
-							type="text"
-							value={selectedInstructor?.expertise || ''}
-							onChange={handleChange}
-							required
-							className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4]"
-						/>
-					</div>
-
-					<div>
-						<label
-							htmlFor="experience"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Experience
-						</label>
-						<input
-							id="experience"
-							name="experience"
-							type="text"
-							value={selectedInstructor?.experience || ''}
-							onChange={handleChange}
-							required
-							className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4]"
-						/>
-					</div>
-
-					<div className="col-span-2">
-						<label
-							htmlFor="description"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Description
-						</label>
-						<textarea
-							id="description"
-							name="description"
-							value={selectedInstructor?.description}
-							maxLength={360}
-							onChange={handleChange}
-							required
-							className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4] h-32"
-						/>
-					</div>
-
-					<div className="col-span-2">
-						<label
-							htmlFor="file"
-							className="block text-sm font-medium text-gray-700"
-						>
-							Instructor Image
-						</label>
-						<input
-							id="file"
-							name="file"
-							type="file"
-							required={!selectedInstructor}
-							onChange={handleFileChange}
-							className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
-						/>
-					</div>
+			{isLoading ? (
+				<div className="flex justify-center items-center">
+					<PuffLoader color="#36d7b7" />
 				</div>
+			) : (
+				<form
+					onSubmit={handleSubmit}
+					className="space-y-6 p-6 rounded-lg shadow bg-[#00a9d4]"
+				>
+					<div className="grid-cols-1 md:grid md:grid-cols-2 gap-6">
+						<div>
+							<label
+								htmlFor="name"
+								className="block text-sm font-medium text-gray-700"
+							>
+								Name
+							</label>
+							<input
+								id="name"
+								name="name"
+								type="text"
+								value={selectedInstructor?.name || ''}
+								onChange={handleChange}
+								required
+								className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4]"
+							/>
+						</div>
 
-				<div className="flex justify-end mt-4">
-					<button
-						type="submit"
-						className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#007592] hover:bg-[#002d39]"
-					>
-						Save Instructor
-					</button>
-				</div>
-			</form>
+						<div>
+							<label
+								htmlFor="expertise"
+								className="block text-sm font-medium text-gray-700"
+							>
+								Expertise
+							</label>
+							<input
+								id="expertise"
+								name="expertise"
+								type="text"
+								value={selectedInstructor?.expertise || ''}
+								onChange={handleChange}
+								required
+								className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4]"
+							/>
+						</div>
+
+						<div>
+							<label
+								htmlFor="experience"
+								className="block text-sm font-medium text-gray-700"
+							>
+								Experience
+							</label>
+							<input
+								id="experience"
+								name="experience"
+								type="text"
+								value={selectedInstructor?.experience || ''}
+								onChange={handleChange}
+								required
+								className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4]"
+							/>
+						</div>
+
+						<div className="col-span-2">
+							<label
+								htmlFor="description"
+								className="block text-sm font-medium text-gray-700"
+							>
+								Description
+							</label>
+							<textarea
+								id="description"
+								name="description"
+								value={selectedInstructor?.description || ''}
+								maxLength={360}
+								onChange={handleChange}
+								required
+								className="mt-1 block w-full rounded-md border-gray-300 p-3 outline-[#00a9d4] h-32"
+							/>
+						</div>
+
+						<div className="col-span-2">
+							<label
+								htmlFor="file"
+								className="block text-sm font-medium text-gray-700"
+							>
+								Instructor Image
+							</label>
+							<input
+								id="file"
+								name="file"
+								type="file"
+								required={!selectedInstructor}
+								onChange={handleFileChange}
+								ref={fileInputRef} // Assign the ref here
+								className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring focus:ring-indigo-500 focus:ring-opacity-50"
+							/>
+						</div>
+					</div>
+
+					<div className="flex justify-end mt-4">
+						<button
+							type="submit"
+							className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-[#007592] hover:bg-[#002d39]"
+						>
+							Save Instructor
+						</button>
+					</div>
+				</form>
+			)}
 
 			{instructors.map((instructor) => (
 				<div

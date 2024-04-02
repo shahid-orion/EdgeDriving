@@ -1,5 +1,5 @@
 export type CarouselItem = {
-	id?: tring
+	id?: string
 	imageUrl?: string
 	caption?: string
 	file?: File

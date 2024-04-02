@@ -41,7 +41,29 @@ const CarouselAdmin = () => {
 
 	const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
 		if (event.target.files && event.target.files[0]) {
-			setFile(event.target.files[0])
+			const file = event.target.files[0]
+			const fileSize = file.size / 1024 / 1024 // Convert bytes to MB
+			const allowedTypes = ['image/jpeg', 'image/png', 'image/gif']
+
+			if (fileSize > 5) {
+				toast.error('File size should not exceed 5 MB.')
+				// Reset the file input
+				event.target.value = ''
+				return // Exit the function
+			} else if (!allowedTypes.includes(file.type)) {
+				toast.error('Only image files (jpeg, png, gif) are allowed.')
+				// Reset the file input
+				event.target.value = ''
+				return // Exit the function
+			} else {
+				setFile(file)
+				// Generate a preview URL for the image
+				const reader = new FileReader()
+				reader.onloadend = () => {
+					setImagePreview(reader.result as string)
+				}
+				reader.readAsDataURL(file)
+			}
 		}
 	}
 
@@ -53,6 +75,7 @@ const CarouselAdmin = () => {
 	const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
 		event.preventDefault()
 		const toastId = toast.loading('Please Wait...')
+		setIsLoading(true)
 		let imageUrl = editingItem?.imageUrl
 
 		if (file) {
@@ -64,23 +87,30 @@ const CarouselAdmin = () => {
 		const itemData = {
 			...editingItem,
 			imageUrl,
+			// Use the edited caption if available, or the current caption if not changed
 			caption: editingItem?.caption
 		}
 
-		if (editingItem?.id) {
-			await updateDoc(doc(db, 'carouselItems', editingItem.id), itemData)
-		} else {
-			await addDoc(collection(db, 'carouselItems'), itemData)
+		try {
+			if (editingItem?.id) {
+				await updateDoc(doc(db, 'carouselItems', editingItem.id), itemData)
+				toast.success('Updated successfully!', { id: toastId })
+			} else {
+				await addDoc(collection(db, 'carouselItems'), itemData)
+				toast.success('Added successfully!', { id: toastId })
+			}
+			// Reset all fields, including the caption, after successful operation
+			setEditingItem({ imageUrl: '', caption: '' })
+			setFile(null) // Reset file
+			setImagePreview('') // Clear the image preview
+		} catch (error) {
+			console.error('Error uploading file and saving data:', error)
+			toast.error('Failed to upload!', { id: toastId })
+		} finally {
+			setIsLoading(false)
 		}
-
-		//toast notification
-		toast.success('Uploaded successfully!', {
-			id: toastId
-		})
-
-		setEditingItem(null) // Reset editing item
-		setFile(null) // Reset file
 	}
+
 	const handleEdit = (item: CarouselItem) => {
 		setEditingItem(item)
 		setImagePreview(item.imageUrl || '')
@@ -151,6 +181,7 @@ const CarouselAdmin = () => {
 						type="submit"
 						className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm 
                             text-sm font-medium rounded-md text-white bg-[#007592] hover:bg-[#002d39]"
+						style={{ display: `${isLoading ? 'none' : 'block'}}` }}
 					>
 						Save Item
 					</button>
@@ -172,7 +203,7 @@ const CarouselAdmin = () => {
 							Edit
 						</button>
 						<button
-							onClick={() => handleDelete(item.id)}
+							onClick={() => handleDelete(item.id!)}
 							className="text-sm bg-red-500 hover:bg-red-700 text-white py-2 px-4 rounded mt-1 md:mt-0"
 						>
 							Delete

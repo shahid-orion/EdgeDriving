@@ -16,7 +16,7 @@ export default function Home() {
 				</p>
 
 				<div className="mt-6 flex flex-col md:flex-row items-center justify-between">
-					<section className="text-3xl md:text-4xl border bg-[#007592] hover:bg-[#002d39] p-2 rounded-md mx-5">
+					<section className="text-2xl md:text-4xl border bg-[#007592] hover:bg-[#002d39] p-2 rounded-md mx-5">
 						<a
 							href="tel:0469046923"
 							className="font-bold text-[#fff]  transition-colors duration-200 mx-4"
@@ -26,7 +26,7 @@ export default function Home() {
 					</section>
 					<a
 						href="tel:0469046923"
-						className="font-bold text-[#002d39] text-5xl transition-colors duration-200 mx-4"
+						className="font-bold text-[#002d39] text-2xl md:text-5xl transition-colors duration-200 mx-4"
 					>
 						0469 046 923
 					</a>

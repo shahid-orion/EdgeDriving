@@ -53,7 +53,7 @@ export default function Home() {
 				<div className="flex flex-col sm:flex-row flex-wrap justify-center gap-4 items-stretch">
 					<Card
 						title="Experienced Instructors"
-						content="Our instructors are certified and have years of experience."
+						content="Our instructors are certified and have 10 years of experience."
 					/>
 					<Card
 						title="Flexible Scheduling"

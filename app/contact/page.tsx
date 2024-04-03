@@ -39,11 +39,11 @@ const ContactPage = () => {
 					<h2 className="text-3xl font-semibold mb-4">Get in Touch</h2>
 					<div className="flex items-center mb-3">
 						<MapPinIcon className="h-6 w-6 mr-2" />
-						<p>123 Drive Lane, Navigate City, 10101</p>
+						<p>67 Warialda Street, Kogarah, NSW 2217</p>
 					</div>
 					<div className="flex items-center mb-3">
 						<EnvelopeIcon className="h-6 w-6 mr-2" />
-						<a href="mailto:info@edgedriving.com">eedgedriving@gmail.com</a>
+						<a href="mailto:eedgedriving@gmail.com">eedgedriving@gmail.com</a>
 					</div>
 					<div className="flex items-center">
 						<PhoneIcon className="h-6 w-6 mr-2" />

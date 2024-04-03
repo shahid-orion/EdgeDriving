@@ -130,7 +130,7 @@ const CarouselAdmin = () => {
 	return (
 		<div className="bg-white shadow rounded-lg p-6 mb-5 max-w-7xl mx-auto">
 			<h2 className="text-4xl font-semibold mb-5 text-center">
-				Manage Carousel Items
+				Manage Slideshow
 			</h2>
 			{/* Loader */}
 			{isLoading ? (

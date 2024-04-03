@@ -5,14 +5,16 @@ import SuccessCarousel from './components/SuccessCarousel'
 export default function Home() {
 	return (
 		<div className="flex flex-col items-center justify-center min-h-screen py-2 bg-gray-50 text-gray-800">
-			<main className="flex flex-col items-center justify-center w-full flex-1 px-20 text-center md:mt-4">
+			<main className="flex flex-col items-center justify-center w-full flex-1 md:px-20 text-center mt-3 md:mt-4">
 				<h1 className="text-4xl sm:text-5xl md:text-6xl font-bold text-gray-800">
 					Welcome to{' '}
 					{/* <span className="text-indigo-700">Edge Driving Instruction!</span> */}
-					<span className="text-[#007592]">Edge Driving Instruction!</span>
 				</h1>
-				<p className="text-3xl text-gray-600 mt-10">
-					Get started by booking your first lesson.
+				<p className="text-3xl sm:text-5xl md:text-6xl font-bold text-[#007592]">
+					Edge Driving Instruction!
+				</p>
+				<p className="text-2xl md:text-3xl text-gray-600 mt-5 md:mt-10">
+					Get started by booking your first lesson
 				</p>
 
 				<div className="mt-6 flex flex-col md:flex-row items-center justify-between">

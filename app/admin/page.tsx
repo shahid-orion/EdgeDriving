@@ -60,8 +60,10 @@ const Dashboard = () => {
 	}
 
 	return (
-		<div key="adminDashboard" className="min-h-screen bg-gray-100 p-8">
-			<h1 className="text-6xl font-bold text-center mb-8">Admin Dashboard</h1>
+		<div key="adminDashboard" className="min-h-screen bg-gray-100 p-2 md:p-8">
+			<h1 className="text-4xl text-center font-bold md:font-semibold mb-5 md:mb-10 sm:text-5xl md:text-6xl text-gray-800">
+				Admin Dashboard
+			</h1>
 			<div className="space-y-12">
 				<CarouselAdmin />
 				<CalendarAdmin />

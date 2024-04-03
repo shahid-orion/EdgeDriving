@@ -195,10 +195,10 @@ const CarouselAdmin = () => {
 					<div>
 						<p className="text-lg">{item.caption}</p>
 					</div>
-					<div>
+					<div className="flex flex-col md:flex-row justify-between">
 						<button
 							onClick={() => handleEdit(item)}
-							className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-6 rounded mr-2"
+							className="text-sm bg-blue-500 hover:bg-blue-700 text-white py-2 px-6 rounded md:mr-2"
 						>
 							Edit
 						</button>

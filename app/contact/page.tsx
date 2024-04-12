@@ -20,6 +20,14 @@ const ContactPage = () => {
 	const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
 		e.preventDefault()
 		// Here you would handle form submission, like sending an email or posting to an API.
+		// Construct the mailto link with form data
+		const mailtoLink = `mailto:eedgedriving@gmail.com?subject=Contact From ${
+			email.name
+		}&body=${encodeURIComponent(email.message)}%0D%0A%0D%0AFrom: ${
+			email.name
+		} <${email.email}>`
+		// Open the mail client
+		window.location.href = mailtoLink
 	}
 
 	return (
@@ -47,7 +55,7 @@ const ContactPage = () => {
 					</div>
 					<div className="flex items-center">
 						<PhoneIcon className="h-6 w-6 mr-2" />
-						<a href="tel:0469046923">0469046923</a>
+						<a href="tel:0469046923">0469 046 923</a>
 					</div>
 				</div>
 
